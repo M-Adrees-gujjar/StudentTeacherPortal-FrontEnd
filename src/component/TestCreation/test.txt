@@ -1,0 +1,686 @@
+import { useRef, useState } from "react";
+
+import {
+  Dialog,
+  DialogPanel,
+  DialogTitle,
+  Transition,
+  TransitionChild,
+} from "@headlessui/react";
+
+// const testOptions = [
+//   {
+//     questionNo: "01",
+//     question:
+//       " Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptate, consequatur. ",
+//     options: ["Option One", "Option Two", "Option Three"],
+//   },
+//   {
+//     questionNo: "02",
+//     question:
+//       " Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptate, consequatur. ",
+//     options: ["Option One", "Option Two", "Option Three"],
+//   },
+//   {
+//     questionNo: "03",
+//     question:
+//       " Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptate, consequatur. ",
+//     options: ["Option One", "Option Two", "Option Three"],
+//   },
+// ];
+
+export default function TestCreation() {
+  const formValue = useRef();
+  const [open, setOpen] = useState(false);
+  const [testOptions, setTestOptions] = useState([]);
+  const [option, setOption] = useState([1, 2]);
+  const [questionVal, setQuestionVal] = useState({
+    value: "",
+  });
+
+  function addOption() {
+    let arr = option.length;
+    setOption([...option, arr + 1]);
+  }
+
+  function deleteOption() {
+    let arr = option.length--;
+    console.log("arr----", arr);
+    setOption([...option]);
+  }
+
+  function handleClick() {
+    console.log("Handle Clicked !!!");
+    setOpen(true);
+  }
+
+  function addQuestion() {
+    let optionArr = [];
+    let arr = formValue.current.children;
+    let arr1 = Array.from(arr);
+    arr1.forEach((element) => {
+      if (element.firstChild.value == "") {
+        alert("Fill all Options");
+        return;
+      } else {
+        optionArr.push(element.firstChild.value);
+      }
+    });
+    let obj = {
+      question: questionVal.value,
+      options: optionArr,
+    };
+    setTestOptions([...testOptions, obj]);
+    console.log("addQuestion Clicked !!!", testOptions);
+    setQuestionVal({
+      value: "",
+    });
+    setOpen(false);
+  }
+
+  function submitPaper() {
+    console.log("Submit Exam --- ", testOptions);
+    if (testOptions.length == 0) {
+      alert("There is nothing to Save");
+    } else {
+      fetch("http://localhost:3000/submit_exam", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          subjectName: "Mathematics",
+          teacherEmail: "madreesgujjar522@gmail.com",
+          exam: testOptions,
+        }),
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          console.log("FrontEnd Res of Exam ---", res);
+        });
+    }
+  }
+
+  return (
+    <div>
+      <div className="">
+        <div className="border-gray-600 border-b-2 flex justify-between align-middle lg:w-5/6 w-full m-auto my-6 lg:px-4 px-2 pb-5">
+          <div className="flex flex-col gap-3">
+            <h1 className="font-bold text-3xl">Make Test for Students</h1>
+            <h1 className="lg:font-bold font-semibold text-xl text-gray-600">
+              Subject : Mathematics
+            </h1>
+          </div>
+          <div className="">
+            <button
+              onClick={submitPaper}
+              type="text"
+              className="bg-blue-600 rounded-sm w-36 px-2 py-2 text-white"
+            >
+              Save & Publish
+            </button>
+          </div>
+        </div>
+        <div className="lg:w-5/6 w-full m-auto py-5 rounded-md  shadow-2xl">
+          <div className="flex justify-around">
+            <h1 className="font-bold text-2xl">Preview Questions</h1>
+            <button
+              onClick={() => handleClick()}
+              type="text"
+              className="bg-blue-600 rounded-sm w-36 px-2 py-2 text-white"
+            >
+              Add Question
+            </button>
+          </div>
+          {testOptions.map((element, index) => (
+            <div
+              className=" my-6 lg:mx-4 mx-2 py-4 shadow-inner shadow-gray-800 rounded-md"
+              key={index}
+            >
+              <div className="flex justify-between mx-3">
+                <h1 className="font-bold text-xl">
+                  Q No # {element.questionNo}
+                </h1>
+
+                <div className="flex gap-4">
+                  <button
+                    type="text"
+                    className="w-24 h-8 border-blue-600 border-2 rounded-sm "
+                  >
+                    Edit
+                  </button>
+                  <button
+                    type="text"
+                    className="w-24 h-8 bg-blue-600 rounded-sm text-white"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+              <div className="">
+                <h1 className="font-semibold text-xl ms-4 text-gray-600">
+                  {element.question}
+                </h1>
+                <ol className="list-[lower-alpha] list-inside ms-8 my-4 font-semibold text-gray-500 lg:w-4/6 w-5/6">
+                  {element.options.map((element, index) => (
+                    <li
+                      className="p-2 border-b-2 border-gray-400 relative"
+                      key={index}
+                    >
+                      <span className=" ">
+                        <span>{element}</span>
+                        <span className=" border-blue-600 border-2 w-fit rounded-sm text-end px-2 absolute right-0">
+                          Mark as Correct
+                        </span>
+                      </span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <Transition show={open}>
+        <Dialog className="relative z-10" onClose={setOpen}>
+          <TransitionChild
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+          </TransitionChild>
+          <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+            <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+              <TransitionChild
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                enterTo="opacity-100 translate-y-0 sm:scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+                leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              >
+                <DialogPanel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 w-full sm:max-w-lg lg:p-0 p-8">
+                  <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                    <div className="sm:flex sm:items-start">
+                      <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                        <DialogTitle
+                          as="h3"
+                          className="text-base font-semibold leading-6 text-gray-900"
+                        >
+                          Add New Question
+                        </DialogTitle>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-gray-50 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                    <div className="space-y-6 w-full">
+                      <div>
+                        <label
+                          htmlFor="name"
+                          className="block text-sm font-medium leading-6 text-gray-900"
+                        >
+                          Write a Question
+                        </label>
+                        <div className="mt-1">
+                          <input
+                            onChange={(e) =>
+                              setQuestionVal({
+                                ...questionVal,
+                                value: e.target.value,
+                              })
+                            }
+                            value={questionVal.value}
+                            id="ques"
+                            name="ques"
+                            type="text"
+                            autoComplete="ques"
+                            placeholder="Enter Question "
+                            className="block w-full rounded-md border-0 ps-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label
+                          htmlFor="email"
+                          className="block text-sm font-medium leading-6 text-gray-900"
+                        >
+                          Enter Options
+                        </label>
+                      </div>
+
+                      <div className="">
+                        <ul className="list-disc ms-4" ref={formValue}>
+                          {option.map((element, index) => (
+                            <li className="mt-1 flex gap-2" key={index}>
+                              <input
+                                // onChange={(e)=>setVal({...val,email : e.target.value})}
+                                // value = {val.email}
+                                id="option"
+                                name="option"
+                                type="text"
+                                autoComplete="option"
+                                placeholder={`Option No ${element}`}
+                                className="block w-full rounded-md border-0 ps-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                              />
+                              <button
+                                onClick={deleteOption}
+                                type="text"
+                                className="bg-blue-600 rounded-sm w-36 text-white"
+                              >
+                                Delete
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                        <div className="mt-1">
+                          <button
+                            onClick={addOption}
+                            // onChange={(e)=>setVal({...val,email : e.target.value})}
+                            id="option"
+                            name="option"
+                            type="button"
+                            autoComplete="option"
+                            placeholder="Option No 01"
+                            required
+                            className="block bg-blue-600 w-full rounded-md border-0 ps-4 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                          >
+                            Add Option
+                          </button>
+                        </div>
+                      </div>
+                      <div className="flex justify-center">
+                        <button
+                          type="button"
+                          className="inline-flex justify-center rounded-md bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"
+                          onClick={addQuestion}
+                        >
+                          Save Question
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </DialogPanel>
+              </TransitionChild>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
+    </div>
+  );
+}
+
+
+// --------------First ChatGPT--------------
+
+import { useRef, useState } from "react";
+import {
+  Dialog,
+  DialogPanel,
+  DialogTitle,
+  Transition,
+  TransitionChild,
+} from "@headlessui/react";
+
+export default function TestCreation() {
+  const formValue = useRef();
+  const [open, setOpen] = useState(false);
+  const [testOptions, setTestOptions] = useState([]);
+  const [option, setOption] = useState([1, 2]);
+  const [questionVal, setQuestionVal] = useState({ value: "", image: null });
+  const [optionValues, setOptionValues] = useState(["", ""]);
+  const [editingQuestionIndex, setEditingQuestionIndex] = useState(null);
+  const [correctOptionIndex, setCorrectOptionIndex] = useState(null);
+
+  function addOption() {
+    setOption([...option, option.length + 1]);
+    setOptionValues([...optionValues, ""]);
+  }
+
+  function deleteOption(index) {
+    if (option.length > 2) {
+      setOption(option.filter((_, i) => i !== index));
+      setOptionValues(optionValues.filter((_, i) => i !== index));
+      if (correctOptionIndex === index) setCorrectOptionIndex(null);
+    } else {
+      alert("Minimum of two options required.");
+    }
+  }
+
+  function handleClick() {
+    setOpen(true);
+  }
+
+  function addQuestion() {
+    const optionArr = Array.from(formValue.current.children).map(
+      (element) => element.firstChild.value
+    );
+
+    if (optionArr.includes("") || optionArr.length < 2) {
+      alert("Fill all Options and ensure minimum of two options.");
+      return;
+    }
+
+    if (correctOptionIndex === null) {
+      alert("Select a correct option");
+      return;
+    }
+
+    const newQuestion = {
+      question: questionVal.value,
+      image: questionVal.image,
+      options: optionArr,
+      correctOption: correctOptionIndex,
+    };
+
+    if (editingQuestionIndex !== null) {
+      testOptions[editingQuestionIndex] = newQuestion;
+      setTestOptions([...testOptions]);
+      setEditingQuestionIndex(null);
+    } else {
+      setTestOptions([...testOptions, newQuestion]);
+    }
+
+    setQuestionVal({ value: "", image: null });
+    setOption([1, 2]);
+    setOptionValues(["", ""]);
+    setCorrectOptionIndex(null);
+    setOpen(false);
+  }
+
+  function editQuestion(index) {
+    const question = testOptions[index];
+    setQuestionVal({ value: question.question, image: question.image });
+    setOption(question.options.map((_, i) => i + 1));
+    setOptionValues(question.options);
+    setCorrectOptionIndex(question.correctOption);
+    setEditingQuestionIndex(index);
+    setOpen(true);
+  }
+
+  function deleteQuestion(index) {
+    setTestOptions(testOptions.filter((_, i) => i !== index));
+  }
+
+  function markAsCorrect(optionIndex) {
+    setCorrectOptionIndex(optionIndex);
+  }
+
+  function handleImageUpload(e) {
+    setQuestionVal({ ...questionVal, image: URL.createObjectURL(e.target.files[0]) });
+  }
+
+  function submitPaper() {
+    if (testOptions.length === 0) {
+      alert("There is nothing to Save");
+      return;
+    }
+
+    console.log("Array of Questions and MCQs with correct option:");
+    console.log(testOptions);
+
+    // Replace with actual API endpoint and payload
+    // Example fetch request commented out for illustration
+    /*
+    fetch("http://localhost:3000/submit_exam", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        subjectName: "Mathematics",
+        teacherEmail: "madreesgujjar522@gmail.com",
+        exam: testOptions,
+      }),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        console.log("FrontEnd Res of Exam ---", res);
+      });
+    */
+  }
+
+  return (
+    <div>
+      <div className="">
+        <div className="border-gray-600 border-b-2 flex justify-between align-middle lg:w-5/6 w-full m-auto my-6 lg:px-4 px-2 pb-5">
+          <div className="flex flex-col gap-3">
+            <h1 className="font-bold text-3xl">Make Test for Students</h1>
+            <h1 className="lg:font-bold font-semibold text-xl text-gray-600">
+              Subject : Mathematics
+            </h1>
+          </div>
+          <div className="">
+            <button
+              onClick={submitPaper}
+              type="text"
+              className="bg-blue-600 rounded-sm w-36 px-2 py-2 text-white"
+            >
+              Save & Publish
+            </button>
+          </div>
+        </div>
+        <div className="lg:w-5/6 w-full m-auto py-5 rounded-md shadow-2xl">
+          <div className="flex justify-around">
+            <h1 className="font-bold text-2xl">Preview Questions</h1>
+            <button
+              onClick={handleClick}
+              type="text"
+              className="bg-blue-600 rounded-sm w-36 px-2 py-2 text-white"
+            >
+              Add Question
+            </button>
+          </div>
+          {testOptions.map((question, qIndex) => (
+            <div
+              className="my-6 lg:mx-4 mx-2 py-4 shadow-inner shadow-gray-800 rounded-md"
+              key={qIndex}
+            >
+              <div className="flex justify-between mx-3">
+                <h1 className="font-bold text-xl">Q No #{qIndex + 1}</h1>
+                <div className="flex gap-4">
+                  <button
+                    type="text"
+                    className="w-24 h-8 border-blue-600 border-2 rounded-sm"
+                    onClick={() => editQuestion(qIndex)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    type="text"
+                    className="w-24 h-8 bg-blue-600 rounded-sm text-white"
+                    onClick={() => deleteQuestion(qIndex)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+              <div className="">
+                <h1 className="font-semibold text-xl ms-4 text-gray-600">
+                  {question.question}
+                </h1>
+                {question.image && (
+                  <div className="ms-8 my-2 pb-2 h-60 w-60">
+                    <img src={question.image} alt="Question" className="w-full h-full object-cover" />
+                  </div>
+                )}
+                <ol className="list-[lower-alpha] list-inside ms-8 my-4 font-semibold text-gray-500 lg:w-4/6 w-5/6">
+                  {question.options.map((option, oIndex) => (
+                    <li
+                      className={`p-2 border-b-2 border-gray-400 relative ${question.correctOption === oIndex ? 'bg-green-100' : ''}`}
+                      key={oIndex}
+                    >
+                      <span className="">
+                        <span>{option}</span>
+                        {question.correctOption === oIndex ? (
+                          <span className="border-blue-600 border-2 w-fit rounded-sm text-end px-2 absolute right-0">
+                            Correct
+                          </span>
+                        ) : (
+                          <span></span>
+                        )}
+                      </span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <Transition show={open}>
+        <Dialog className="relative z-10" onClose={() => setOpen(false)}>
+          <TransitionChild
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+          </TransitionChild>
+          <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+            <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+              <TransitionChild
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                enterTo="opacity-100 translate-y-0 sm:scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+                leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              >
+                <DialogPanel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 w-full sm:max-w-lg lg:p-0 p-8">
+                  <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                    <div className="sm:flex sm:items-start">
+                      <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                        <DialogTitle
+                          as="h3"
+                          className="text-base font-semibold leading-6 text-gray-900"
+                        >
+                          Add New Question
+                        </DialogTitle>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-white px-4 sm:px-6">
+                    <div className="gap-2 my-3">
+                      <label
+                        htmlFor="ques"
+                        className="block text-sm font-medium leading-6 text-gray-900"
+                      >
+                        Question
+                      </label>
+                      <div className="mt-1">
+                        <input
+                          onChange={(e) =>
+                            setQuestionVal({ ...questionVal, value: e.target.value })
+                          }
+                          value={questionVal.value}
+                          id="ques"
+                          name="ques"
+                          type="text"
+                          autoComplete="ques"
+                          placeholder="Enter Question"
+                          className="block w-full rounded-md border-0 ps-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label
+                        htmlFor="image"
+                        className="block text-sm font-medium leading-6 text-gray-900"
+                      >
+                        Upload Image
+                      </label>
+                      <div className="mt-1">
+                        <input
+                          onChange={handleImageUpload}
+                          id="image"
+                          name="image"
+                          type="file"
+                          className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label
+                        htmlFor="options"
+                        className="block text-sm font-medium leading-6 text-gray-900"
+                      >
+                        Enter Options
+                      </label>
+                    </div>
+                    <div>
+                      <ul className="list-disc ms-4" ref={formValue}>
+                        {option.map((element, index) => (
+                          <li className="mt-1 flex gap-2" key={index}>
+                            <input
+                              id="option"
+                              name="option"
+                              type="text"
+                              value={optionValues[index]}
+                              onChange={(e) =>
+                                setOptionValues(
+                                  optionValues.map((opt, i) =>
+                                    i === index ? e.target.value : opt
+                                  )
+                                )
+                              }
+                              placeholder={`Option No ${element}`}
+                              className="block w-4/6 rounded-md border-0 ps-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            />
+                            <button
+                              onClick={() => deleteOption(index)}
+                              type="button"
+                              className="bg-blue-600 rounded-sm px-2 py-1 text-white text-xs w-1/6"
+                            >
+                              Delete
+                            </button>
+                            <button
+                              onClick={() => markAsCorrect(index)}
+                              type="button"
+                              className={`rounded-sm text-xs px-1 py-1 w-1/6 ${correctOptionIndex === index ? 'bg-green-600' : 'bg-blue-600'} text-white`}
+                            >
+                              {correctOptionIndex === index ? 'Correct' : 'Mark as Correct'}
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                      <div className="mt-1">
+                        <button
+                          onClick={addOption}
+                          type="button"
+                          className="block bg-blue-600 w-full rounded-md border-0 ps-4 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        >
+                          Add Option
+                        </button>
+                      </div>
+                    </div>
+                    <div className="flex justify-center">
+                      <button
+                        type="button"
+                        className="inline-flex justify-center rounded-md bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"
+                        onClick={addQuestion}
+                      >
+                        Save Question
+                      </button>
+                    </div>
+                  </div>
+                </DialogPanel>
+              </TransitionChild>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
+    </div>
+  );
+}
+
+
+
