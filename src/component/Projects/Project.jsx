@@ -23,7 +23,7 @@ const SectionTwo = () => {
         <div className="two_box col-lg-4 col-12">
           <div className="two_box_child two_box_first flex flex-col justify-center items-center gap-3 bg-blue-400 rounded-md my-4 py-8 bottom-[0%] transition-all duration-500 hover:bottom-[5%] hover:relative hover:shadow-lg">
             <div className="img w-1/2 h-2/5">
-              <img src="/src/assets/Images/01_index.jpg" alt="" className="rounded-full w-full h-full" />
+              <img src="https://res.cloudinary.com/dkzca4hyd/image/upload/v1717440991/01_index_xu5bwc.jpg" alt="" className="rounded-full w-full h-full" />
             </div>
             <h2 className="font-semibold text-white">Primary Exams</h2>
           </div>
@@ -31,7 +31,7 @@ const SectionTwo = () => {
         <div className="two_box col-lg-4 col-12">
           <div className="two_box_child two_box_second flex flex-col justify-center items-center bg-blue-400 gap-3 rounded-md my-4 py-8 bottom-[0%] transition-all duration-500 hover:bottom-[5%] hover:relative hover:shadow-lg">
             <div className="img w-1/2 h-2/5">
-              <img src="/src/assets/Images/01_index.jpg" alt="" className="rounded-full w-full h-full" />
+              <img src="https://res.cloudinary.com/dkzca4hyd/image/upload/v1717440991/01_index_xu5bwc.jpg" alt="" className="rounded-full w-full h-full" />
             </div>
             <h2 className="font-semibold text-white">Bank Exams</h2>
           </div>
@@ -39,7 +39,7 @@ const SectionTwo = () => {
         <div className="two_box col-lg-4 col-12">
           <div className="two_box_child two_box_third flex flex-col justify-center items-center bg-blue-400 gap-3 rounded-md my-4 py-8 bottom-[0%] transition-all duration-500 hover:bottom-[5%] hover:relative hover:shadow-lg">
             <div className="img w-1/2 h-2/5">
-              <img src="/src/assets/Images/01_index.jpg" alt="" className="rounded-full w-full h-full" />
+              <img src="https://res.cloudinary.com/dkzca4hyd/image/upload/v1717440991/01_index_xu5bwc.jpg" alt="" className="rounded-full w-full h-full" />
             </div>
             <h2 className="font-semibold text-white">Other Exams</h2>
           </div>

@@ -39,7 +39,7 @@ function SignIn() {
       <div className="flex items-center justify-center h-5/6 lg:py-4 py-2 shadow-2xl shadow-slate-800 lg:w-1/3 w-full rounded-lg">
       <div className="max-w-md w-full p-6 bg-white rounded-lg">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <img className="mx-auto h-20 w-auto" src="/src/assets/Images/00_logo.png" alt="Your Company" />
+          <img className="mx-auto h-20 w-auto" src="https://res.cloudinary.com/dkzca4hyd/image/upload/v1717440991/00_logo_x3dtn2.png" alt="Your Company" />
           <h2 className="mt-2 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Sign In to Your Account
           </h2>
