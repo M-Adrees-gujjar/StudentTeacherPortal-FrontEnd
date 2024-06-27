@@ -1,4 +1,3 @@
-
 const SectionTwo = () => {
   return (
     <section className="section_two flex flex-col pt-5 pb-5" id="project">
@@ -19,8 +18,8 @@ const SectionTwo = () => {
           </div>
         </div>
       </div>
-      <div className="section_two_child flex justify-between container mx-auto  w-11/12">
-        <div className="two_box col-lg-4 col-12">
+      <div className="section_two_child flex lg:flex-row flex-col justify-between container mx-auto  w-11/12">
+        <div className="two_box ">
           <div className="two_box_child two_box_first flex flex-col justify-center items-center gap-3 bg-blue-400 rounded-md my-4 py-8 bottom-[0%] transition-all duration-500 hover:bottom-[5%] hover:relative hover:shadow-lg">
             <div className="img w-1/2 h-2/5">
               <img src="https://res.cloudinary.com/dkzca4hyd/image/upload/v1717440991/01_index_xu5bwc.jpg" alt="" className="rounded-full w-full h-full" />
@@ -28,7 +27,7 @@ const SectionTwo = () => {
             <h2 className="font-semibold text-white">Primary Exams</h2>
           </div>
         </div>
-        <div className="two_box col-lg-4 col-12">
+        <div className="two_box ">
           <div className="two_box_child two_box_second flex flex-col justify-center items-center bg-blue-400 gap-3 rounded-md my-4 py-8 bottom-[0%] transition-all duration-500 hover:bottom-[5%] hover:relative hover:shadow-lg">
             <div className="img w-1/2 h-2/5">
               <img src="https://res.cloudinary.com/dkzca4hyd/image/upload/v1717440991/01_index_xu5bwc.jpg" alt="" className="rounded-full w-full h-full" />
@@ -36,7 +35,7 @@ const SectionTwo = () => {
             <h2 className="font-semibold text-white">Bank Exams</h2>
           </div>
         </div>
-        <div className="two_box col-lg-4 col-12">
+        <div className="two_box ">
           <div className="two_box_child two_box_third flex flex-col justify-center items-center bg-blue-400 gap-3 rounded-md my-4 py-8 bottom-[0%] transition-all duration-500 hover:bottom-[5%] hover:relative hover:shadow-lg">
             <div className="img w-1/2 h-2/5">
               <img src="https://res.cloudinary.com/dkzca4hyd/image/upload/v1717440991/01_index_xu5bwc.jpg" alt="" className="rounded-full w-full h-full" />
